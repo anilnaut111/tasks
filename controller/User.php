@@ -132,7 +132,7 @@ class User extends Controller {
 	
 	function adminTasks(){
 		$data = array();
-		$result = $this->model->get('tasks', '');
+		$result = $this->model->get_all('tasks');
 		$data['result'] = $result;
 		$this->load_view('admintasks', $data);		
 	}	

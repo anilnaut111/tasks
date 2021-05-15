@@ -11,7 +11,7 @@ class UserModel extends Model{
 		return $this->read($table,array('*'),null);
 	}
 
-	function get($table, $where, $start=0, $limit=0,$orderBy="task_id", $sort='ASC'){
+	function get($table, $where, $start=0, $limit=0, $orderBy='', $sort=''){
 		$order = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' . $sort : '';
 		return $this->read($table, array('*'), $where, $start, $limit, $order);
 	}
@@ -19,6 +19,7 @@ class UserModel extends Model{
 	function addTask($tableData){
 		return $this->create('tasks', $tableData);
 	}	
+	
 	function editTask($whatToSet,$whereArgs){
 		return $this->update("tasks",$whatToSet,$whereArgs);
 	}		
