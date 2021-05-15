@@ -9,13 +9,30 @@ class User extends Controller {
 	}
 	
 	function user(){
+		global $RECORDS_PER_PAGE;
+		
 		if(isset($_SESSION['user']['type']) && $_SESSION['user']['type'] == 'admin'){ 		
 			header('Location: ' . $SITE_URL .'/index.php/user/adminTasks');
 			exit;		
 		}
 		$_SESSION['user']['type'] = 'guest';
-		$data = array();
-		$result = $this->model->get('tasks', '');
+		
+		$resultAll = $this->model->get_all('tasks');
+		
+		$start = (isset($_GET['start']) && $_GET['start'] > 0) ? $_GET['start'] : 0;	
+		$limit = $RECORDS_PER_PAGE;
+		
+		$order = (isset($_GET['orderby'])) ? $_GET['orderby'] : 'task_id';		
+		$sort = (isset($_GET['sort']) && $_GET['sort'] == 'a') ? 'ASC' : 'DESC';		
+		$result = $this->model->get('tasks', '', $start, $limit, $order, $sort);
+		
+		$data = array();		
+		$data['start'] = $start;		
+		$data['order'] = $order;		
+		$data['sort'] = $sort;		
+		$data['controller'] = 'user';		
+		$data['function'] = 'user';		
+		$data['resultall'] = $resultAll;
 		$data['result'] = $result;
 		$this->load_view('userhome', $data);
 	}
@@ -41,7 +58,7 @@ class User extends Controller {
 		$this->load_view('addtask');
 	}
 	
-	//http://localhost/CJ-MVC/index.php/User/editTask/1
+
 	function editTask($args){
 		global $SITE_URL;
 		$view_data = array();
@@ -56,8 +73,7 @@ class User extends Controller {
 			
 			$tableData = array('description'=>$description, 'status'=>$status);
 			$condition = array('task_id'=>$task_id);	
-			print_r($tableData);
-			print($condition);
+
 			$this->model->editTask($tableData, $condition);
 			header('Location: ' . $SITE_URL .'/index.php/user');
 			exit;
@@ -68,19 +84,14 @@ class User extends Controller {
 				exit;
 			}
 			
-			//var_dump($args);
 			$condition = array('task_id'=>$args);	
 			$result = $this->model->get('tasks', $condition);
 			$view_data['result'] = $result[0];
 		}		
 		$this->load_view('edittask', $view_data);
-			
-		//$result = $this->model->get_all();
-		//print_r($result);
-		//echo json_encode($result);
 	}
 
-	//http://localhost/CJ-MVC/index.php/User/login
+	
 	function login(){
 		global $SITE_URL;
 		$view_data = array();
@@ -92,7 +103,6 @@ class User extends Controller {
 			$result = $this->model->get('users',$condition);		
 			if(count($result) > 0) {
 				$user_info = $result[0];
-				print_r($result);
 				if($user_info['password'] == md5($password)) {
 					$_SESSION['user']['type'] = 'admin';
 					header('Location: ' . $SITE_URL .'/index.php/user/adminTasks');

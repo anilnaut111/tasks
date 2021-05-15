@@ -7,12 +7,13 @@ class UserModel extends Model{
 		parent::__contruct();
 	}
 
-	function get_all(){
-		return $this->read('users',array('*'),null);
+	function get_all($table){
+		return $this->read($table,array('*'),null);
 	}
 
-	function get($table, $where, $start=0, $end=0){
-		return $this->read($table, array('*'), $where, $start, $end);
+	function get($table, $where, $start=0, $limit=0,$orderBy="task_id", $sort='ASC'){
+		$order = !empty($orderBy) ? ' ORDER BY ' . $orderBy . ' ' . $sort : '';
+		return $this->read($table, array('*'), $where, $start, $limit, $order);
 	}
 	
 	function addTask($tableData){

@@ -24,13 +24,14 @@ function main(){
 	$start = getArgumentStart($parameters);
 
 	if($start != -1){
-		$controller_name = $parameters[$start];
+		$controller_name = ucfirst($parameters[$start]);
 		
 		//include controller
 		require_once('./controller/'.$controller_name.'.php');
 
 		$function_name = !empty($parameters[$start+1]) ? $parameters[$start+1] : $controller_name; 
 		$start+=2;
+
 		$args = array();
 		for(;$start < count($parameters); $start++){
 			array_push($args, $parameters[$start]);
@@ -38,9 +39,11 @@ function main(){
 		call_user_func_array(array(new $controller_name, $function_name), $args);
 	}
 	else {
-		$controller_name = 'user';
+		$controller_name = 'User';
+		//include controller
+		require_once('./controller/'.$controller_name.'.php');
 
-		$function_name = 'notfound'; 
+		$function_name = 'user'; 
 		$args = array();
 		array_push($args, '404');
 		call_user_func_array(array(new $controller_name, $function_name), $args);	

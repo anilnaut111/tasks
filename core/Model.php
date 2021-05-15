@@ -32,7 +32,7 @@ class Model{
 			return 'Error at MODEL/create'; 
 	}
 
-	function read($tableName,$args,$whereArgs,$start=0,$end=0){
+	function read($tableName,$args,$whereArgs,$start=0,$limit=0,$order=''){
 	
 		  $sql='SELECT ';
 
@@ -44,13 +44,20 @@ class Model{
 	   if($whereArgs)
 		$sql= $this->where($sql,$whereArgs);	
 
-	   $sql=$this->appendSemicolon($sql);
-	   if($start > 0 && $start < $end) {
-		$sql = $sql . ' LIMIT ' . $start . ' ' . $end;
+	   //order by
+	   $sql.=$order;
+	   
+	   //limit
+	   if($limit > 0) {
+		$sql = $sql . ' LIMIT ' . $start . ',' . $limit;
 	   }
-		$finale=array();
-
+	   
+	   $sql=$this->appendSemicolon($sql);
+	   
+	   
+		//echo $sql.'<br>';
 		$result = $this->connection->query($sql);
+		$finale=array();
 		if($result){
 			while($row=mysqli_fetch_assoc($result))
 				array_push($finale,$row);
