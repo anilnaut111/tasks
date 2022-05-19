@@ -10,7 +10,7 @@ class User extends Controller {
 	
 	function user(){
 		global $RECORDS_PER_PAGE;
-		
+		//test
 		if(isset($_SESSION['user']['type']) && $_SESSION['user']['type'] == 'admin'){ 		
 			header('Location: ' . $SITE_URL .'/index.php/user/adminTasks');
 			exit;		
