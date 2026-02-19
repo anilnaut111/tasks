@@ -10,7 +10,7 @@
 	if($HOST == 'local.mytest') {
 		$db_params = array(
 			'servername' => 'localhost',
-			'username' => 'rootuser',
+			'username' => 'taskbook',
 			'password' => 'AnilNaut11@#',
 			'dbname' => 'taskbook'
 		);

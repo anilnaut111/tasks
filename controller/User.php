@@ -108,6 +108,11 @@ class User extends Controller {
 					header('Location: ' . $SITE_URL .'/index.php/user/adminTasks');
 					exit;
 				}
+				else {
+					$view_data['loginerror'] = "Please enter the valid details.";				
+					$view_data['username'] = $username;				
+					$this->load_view('login', $view_data);
+				}
 			}
 			else {
 				$view_data['loginerror'] = "Please enter the valid details.";				
